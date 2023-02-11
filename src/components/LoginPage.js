@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { signIn, signUp } from '../auth';
 import { getUserDataFromFirebase, createUserDataOnFirebase } from '../database';
+import { storeUserData } from '../localStorage';
 
 const LoginPage = ({ setUserData }) => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
@@ -25,7 +26,7 @@ const LoginPage = ({ setUserData }) => {
     const user = await signIn(email, password);
     const userData = await getUserDataFromFirebase(user.email);
     setUserData(userData);
-    //TODO: store userdata in local storage
+    storeUserData(userData);
     console.log('user: ', user);
   };
 
@@ -36,11 +37,11 @@ const LoginPage = ({ setUserData }) => {
       name: userName,
       email: email.toLowerCase(),
       currentState: 'out',
-      history: [],
+      // history: [],
     };
     await createUserDataOnFirebase(initialUserData);
     setUserData(initialUserData);
-    //TODO: store userdata in local storage
+    storeUserData(initialUserData);
   };
 
   return (

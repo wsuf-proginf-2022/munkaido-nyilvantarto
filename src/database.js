@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 import config from './db_config';
 
@@ -17,4 +17,15 @@ export const db = getFirestore();
  */
 export async function createUserDataOnFirebase(user) {
   await setDoc(doc(db, 'users', user.email), user);
+}
+
+export async function getUserDataFromFirebase(email) {
+  // database -> collection -> document
+  const docRef = doc(db, 'users', email);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  }
+  console.log('No such user data!');
+  return null;
 }
