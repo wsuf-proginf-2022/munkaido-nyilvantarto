@@ -1,9 +1,48 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+  TextInput,
+  Button,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import { signIn, signUp } from '../auth';
+import { getUserDataFromFirebase, createUserDataOnFirebase } from '../database';
 
 const LoginPage = ({ setUserData }) => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
+  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  const login = async () => {
+    console.log('logging in...');
+    const user = await signIn(email, password);
+    const userData = await getUserDataFromFirebase(user.email);
+    setUserData(userData);
+    //TODO: store userdata in local storage
+    console.log('user: ', user);
+  };
+
+  const register = async () => {
+    console.log('registering...');
+    await signUp(email, password);
+    const initialUserData = {
+      name: userName,
+      email: email.toLowerCase(),
+      currentState: 'out',
+      history: [],
+    };
+    await createUserDataOnFirebase(initialUserData);
+    setUserData(initialUserData);
+    //TODO: store userdata in local storage
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.toggleContainer}>
@@ -35,10 +74,39 @@ const LoginPage = ({ setUserData }) => {
           ) : (
             <Text style={styles.title}>Bejelentkezés</Text>
           )}
-          <TextInput style={styles.input} placeholder="email cím" />
-          {isSignUpActive && <TextInput style={styles.input} placeholder="Név" />}
-          <TextInput style={styles.input} placeholder="jelszó" />
-          {isSignUpActive && <TextInput style={styles.input} placeholder="jelszó mégegyszer" />}
+          <TextInput
+            style={styles.input}
+            placeholder="email cím"
+            value={email}
+            onChangeText={setEmail}
+          />
+          {isSignUpActive && (
+            <TextInput
+              style={styles.input}
+              placeholder="Név"
+              value={userName}
+              onChangeText={setUserName}
+            />
+          )}
+          <TextInput
+            style={styles.input}
+            placeholder="jelszó"
+            value={password}
+            onChangeText={setPassword}
+          />
+          {isSignUpActive && (
+            <TextInput
+              style={styles.input}
+              placeholder="jelszó mégegyszer"
+              value={passwordConfirm}
+              onChangeText={setPasswordConfirm}
+            />
+          )}
+          {isSignUpActive ? (
+            <Button title="Regisztráció" onPress={register} />
+          ) : (
+            <Button title="Bejelentkezés" onPress={login} />
+          )}
         </View>
       </KeyboardAwareScrollView>
     </View>
