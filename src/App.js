@@ -6,7 +6,7 @@ import InnerPage from './components/InnerPage';
 import LoginPage from './components/LoginPage';
 import { getUserData } from './localStorage';
 
-const App = props => {
+const App = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {

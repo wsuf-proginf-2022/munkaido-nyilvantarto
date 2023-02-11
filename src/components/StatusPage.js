@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
 
 import { signOutUser } from '../auth';
 import { saveHistoryOnFirebase, toggleStateOnFirebase } from '../database';
-import { removeUserData } from '../localStorage';
+import { removeUserData, updateStateOnLocalStorage } from '../localStorage';
 
 const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
   const handleLogout = async () => {
@@ -23,6 +23,7 @@ const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
     // TODO: update database
     toggleStateOnFirebase(userData.email, newState);
     // TODO: update local storage
+    updateStateOnLocalStorage(userData.email, newState);
     // TODO: save history on database
     saveHistoryOnFirebase(userData.email, newState);
   };
