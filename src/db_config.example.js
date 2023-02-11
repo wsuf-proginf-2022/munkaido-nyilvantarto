@@ -1,5 +1,4 @@
 const config = {
-  config: 'sdfsdf',
   apiKey: '<YOUR API KEY>',
   authDomain: '<YOUR PROJECT ID>.firebaseapp.com',
   databaseURL: 'https://<YOUR PROJECT ID>.firebaseio.com',
