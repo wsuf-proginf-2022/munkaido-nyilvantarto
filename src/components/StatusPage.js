@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
 
 import { signOutUser } from '../auth';
+import { toggleStateOnFirebase } from '../database';
 import { removeUserData } from '../localStorage';
 
 const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
@@ -11,7 +12,19 @@ const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
     setUserData(null);
   };
 
-  const toggleSwitch = () => {};
+  const toggleSwitch = () => {
+    let newState = '';
+    if (userData.currentState === 'in') {
+      newState = 'out';
+    } else {
+      newState = 'in';
+    }
+    setUserData({ ...userData, currentState: newState });
+    // TODO: update database
+    toggleStateOnFirebase(userData.email, newState);
+    // TODO: update local storage
+    // TODO: save history on database
+  };
 
   return (
     <View style={styles.container}>

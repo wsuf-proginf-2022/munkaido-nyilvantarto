@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 import config from './db_config';
 
@@ -28,4 +28,13 @@ export async function getUserDataFromFirebase(email) {
   }
   console.log('No such user data!');
   return null;
+}
+
+export async function toggleStateOnFirebase(email, newState) {
+  // https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
+  // database -> collection -> document
+  console.log(email, ' is now ', newState);
+  await updateDoc(doc(db, 'users', email), {
+    currentState: newState,
+  });
 }
