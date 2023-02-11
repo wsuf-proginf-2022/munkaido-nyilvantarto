@@ -8,6 +8,7 @@ import StatusPage from './StatusPage';
 
 const Stack = createNativeStackNavigator();
 
+// prop drilling problem: https://kentcdodds.com/blog/prop-drilling
 const InnerPage = ({ userData, setUserData }) => {
   return (
     <NavigationContainer>
@@ -17,7 +18,9 @@ const InnerPage = ({ userData, setUserData }) => {
             <StatusPage {...navigatorProps} setUserData={setUserData} userData={userData} />
           )}
         </Stack.Screen>
-        <Stack.Screen name="Napló" component={HistoryPage} />
+        <Stack.Screen name="Napló">
+          {navigatorProps => <HistoryPage {...navigatorProps} userData={userData} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

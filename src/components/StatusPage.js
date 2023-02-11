@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
 
 import { signOutUser } from '../auth';
-import { toggleStateOnFirebase } from '../database';
+import { saveHistoryOnFirebase, toggleStateOnFirebase } from '../database';
 import { removeUserData } from '../localStorage';
 
 const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
@@ -24,6 +24,7 @@ const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
     toggleStateOnFirebase(userData.email, newState);
     // TODO: update local storage
     // TODO: save history on database
+    saveHistoryOnFirebase(userData.email, newState);
   };
 
   return (

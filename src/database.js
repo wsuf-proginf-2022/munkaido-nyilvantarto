@@ -1,5 +1,19 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import {
+  getFirestore,
+  doc,
+  collection,
+  setDoc,
+  deleteDoc,
+  limit,
+  orderBy,
+  getDoc,
+  getDocs,
+  query,
+  addDoc,
+  updateDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
 
 import config from './db_config';
 
@@ -37,4 +51,32 @@ export async function toggleStateOnFirebase(email, newState) {
   await updateDoc(doc(db, 'users', email), {
     currentState: newState,
   });
+}
+
+export async function saveHistoryOnFirebase(email, newState) {
+  // database -> collection -> document -> collection
+  await addDoc(collection(db, 'users', email, 'history'), {
+    date: serverTimestamp(),
+    state: newState,
+  });
+  console.log(`state of ${email} was saved in the database width: ${newState}`);
+}
+
+export async function getHistory(email) {
+  // https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection
+  const q = query(collection(db, 'users', email, 'history'), orderBy('date', 'desc'), limit(40));
+  const querySnapshot = await getDocs(q);
+  const result = [];
+  querySnapshot.forEach(doc => {
+    const data = {
+      ...doc.data(),
+      id: doc.id,
+    };
+    result.push(data);
+  });
+  return result;
+}
+
+export async function deleteHistoryById(email, id) {
+  await deleteDoc(doc(db, 'users', email, 'history', id));
 }
