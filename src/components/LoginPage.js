@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform, TouchableOpacity, TextInput } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const LoginPage = ({ setUserData }) => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
@@ -25,7 +26,9 @@ const LoginPage = ({ setUserData }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={{ alignSelf: 'stretch' }}>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ alignSelf: 'stretch' }}>
         <View style={styles.formContainer}>
           {isSignUpActive ? (
             <Text style={styles.title}>Regisztráció</Text>
@@ -33,11 +36,11 @@ const LoginPage = ({ setUserData }) => {
             <Text style={styles.title}>Bejelentkezés</Text>
           )}
           <TextInput style={styles.input} placeholder="email cím" />
-          <TextInput style={styles.input} placeholder="Név" />
+          {isSignUpActive && <TextInput style={styles.input} placeholder="Név" />}
           <TextInput style={styles.input} placeholder="jelszó" />
           {isSignUpActive && <TextInput style={styles.input} placeholder="jelszó mégegyszer" />}
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
