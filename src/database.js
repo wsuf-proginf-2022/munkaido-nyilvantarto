@@ -1,10 +1,10 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
-import { config } from './db_config';
+import config from './db_config';
 
-const app = initializeApp(config);
-const db = getFirestore(app);
+initializeApp(config);
+export const db = getFirestore();
 
 //  There are only two hard things in Computer Science: cache invalidation and
 //  naming things. -- Phil Karlton

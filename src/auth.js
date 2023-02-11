@@ -7,6 +7,9 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 
+import { app } from './database';
+const auth = getAuth(app);
+
 export async function signUp(email, password) {
   // a try blockon belüli részben ha hiba van akkor azt a catch blokkban elkaphatjuk
   try {
