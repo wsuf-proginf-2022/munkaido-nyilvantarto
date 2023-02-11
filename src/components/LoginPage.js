@@ -94,11 +94,13 @@ const LoginPage = ({ setUserData }) => {
             placeholder="jelszó"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry={true}
           />
           {isSignUpActive && (
             <TextInput
               style={styles.input}
               placeholder="jelszó mégegyszer"
+              secureTextEntry={true}
               value={passwordConfirm}
               onChangeText={setPasswordConfirm}
             />
