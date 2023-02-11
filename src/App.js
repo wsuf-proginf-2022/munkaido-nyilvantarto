@@ -8,9 +8,9 @@ const App = props => {
   const [userData, setUserData] = useState(null);
 
   if (userData === null) {
-    return <LoginPage />;
+    return <LoginPage setUserData={setUserData} />;
   }
-  return <InnerPage />;
+  return <InnerPage setUserData={setUserData} />;
 };
 
 export default App;
