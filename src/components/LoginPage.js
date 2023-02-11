@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, TextInput } from 'react-native';
 
 const LoginPage = ({ setUserData }) => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
@@ -25,6 +25,19 @@ const LoginPage = ({ setUserData }) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <View style={{ alignSelf: 'stretch' }}>
+        <View style={styles.formContainer}>
+          {isSignUpActive ? (
+            <Text style={styles.title}>Regisztráció</Text>
+          ) : (
+            <Text style={styles.title}>Bejelentkezés</Text>
+          )}
+          <TextInput style={styles.input} placeholder="email cím" />
+          <TextInput style={styles.input} placeholder="Név" />
+          <TextInput style={styles.input} placeholder="jelszó" />
+          {isSignUpActive && <TextInput style={styles.input} placeholder="jelszó mégegyszer" />}
+        </View>
+      </View>
     </View>
   );
 };
@@ -43,6 +56,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 30,
     marginVertical: 30,
+    color: '#000000',
   },
   input: {
     height: 40,
