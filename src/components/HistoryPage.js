@@ -27,6 +27,7 @@ export default function HistoryPage(props) {
   );
 
   useEffect(() => {
+    // async IIFE
     (async () => {
       const historyFromFirebase = await getHistory(props.userData.email);
       setHistory(historyFromFirebase);

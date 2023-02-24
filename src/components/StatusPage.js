@@ -2,13 +2,11 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from 'react-native';
 
 import { signOutUser } from '../auth';
-import { saveHistoryOnFirebase, toggleStateOnFirebase } from '../database';
-import { removeUserData, updateStateOnLocalStorage } from '../localStorage';
+import { addHistory, updateUserState } from '../database';
 
 const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
   const handleLogout = async () => {
     await signOutUser();
-    await removeUserData();
     setUserData(null);
   };
 
@@ -20,12 +18,8 @@ const StatusPage = ({ navigation: { navigate }, userData, setUserData }) => {
       newState = 'in';
     }
     setUserData({ ...userData, currentState: newState });
-    // TODO: update database
-    toggleStateOnFirebase(userData.email, newState);
-    // TODO: update local storage
-    updateStateOnLocalStorage(userData.email, newState);
-    // TODO: save history on database
-    saveHistoryOnFirebase(userData.email, newState);
+    updateUserState(userData.email, newState);
+    addHistory(userData.email, newState);
   };
 
   return (

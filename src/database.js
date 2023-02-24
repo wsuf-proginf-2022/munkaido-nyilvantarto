@@ -29,54 +29,81 @@ export const db = getFirestore();
  * @export
  * @param {object} user - The user data to be stored in the database.
  */
-export async function createUserDataOnFirebase(user) {
-  await setDoc(doc(db, 'users', user.email), user);
+export async function createUserData(user) {
+  try {
+    await setDoc(doc(db, 'users', user.email), user);
+  } catch (error) {
+    window.alert('error during user creation: ', error.message);
+  }
 }
 
-export async function getUserDataFromFirebase(email) {
+/**
+ *
+ *
+ * @export
+ * @param {string} email address of the user
+ * @returns
+ */
+export async function getUserDataByEmail(email) {
   // database -> collection -> document
   const docRef = doc(db, 'users', email);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     return docSnap.data();
   }
-  console.log('No such user data!');
+  window.alert('No such user data!');
   return null;
 }
 
-export async function toggleStateOnFirebase(email, newState) {
+export async function updateUserState(email, newState) {
   // https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
   // database -> collection -> document
-  console.log(email, ' is now ', newState);
-  await updateDoc(doc(db, 'users', email), {
-    currentState: newState,
-  });
+  try {
+    console.log(email, ' is now ', newState);
+    await updateDoc(doc(db, 'users', email), {
+      currentState: newState,
+    });
+  } catch (_e) {
+    window.alert('Error updating user state on remote database');
+  }
 }
 
-export async function saveHistoryOnFirebase(email, newState) {
-  // database -> collection -> document -> collection
-  await addDoc(collection(db, 'users', email, 'history'), {
-    date: serverTimestamp(),
-    state: newState,
-  });
-  console.log(`state of ${email} was saved in the database width: ${newState}`);
+export async function addHistory(email, newState) {
+  try {
+    // database -> collection -> document -> collection
+    await addDoc(collection(db, 'users', email, 'history'), {
+      date: serverTimestamp(),
+      state: newState,
+    });
+    console.log(`state of ${email} was saved in the database width: ${newState}`);
+  } catch (e) {
+    window.alert('Error saving user history on remote database');
+  }
 }
 
 export async function getHistory(email) {
-  // https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection
-  const q = query(collection(db, 'users', email, 'history'), orderBy('date', 'desc'), limit(40));
-  const querySnapshot = await getDocs(q);
-  const result = [];
-  querySnapshot.forEach(doc => {
-    const data = {
-      ...doc.data(),
-      id: doc.id,
-    };
-    result.push(data);
-  });
-  return result;
+  try {
+    // https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection
+    const q = query(collection(db, 'users', email, 'history'), orderBy('date', 'desc'), limit(40));
+    const querySnapshot = await getDocs(q);
+    const result = [];
+    querySnapshot.forEach(doc => {
+      const data = {
+        ...doc.data(),
+        id: doc.id,
+      };
+      result.push(data);
+    });
+    return result;
+  } catch (e) {
+    window.alert('Error getting user history from remote database');
+  }
 }
 
 export async function deleteHistoryById(email, id) {
-  await deleteDoc(doc(db, 'users', email, 'history', id));
+  try {
+    await deleteDoc(doc(db, 'users', email, 'history', id));
+  } catch (e) {
+    window.alert('Error deleting user history from remote database');
+  }
 }

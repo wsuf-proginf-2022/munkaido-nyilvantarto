@@ -51,7 +51,8 @@ export async function loginStatus() {
   // https://firebase.google.com/docs/auth/web/manage-users#get_the_currently_signed-in_user
   const auth = getAuth();
   return new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, user => {
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      unsubscribe();
       if (user) {
         resolve(user);
       } else {
