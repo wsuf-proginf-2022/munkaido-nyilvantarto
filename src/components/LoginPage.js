@@ -11,7 +11,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { signIn, signUp } from '../auth';
-import { getUserData, createUserData } from '../database';
+import { getUserDataByEmail, createUserData } from '../database';
 
 const LoginPage = ({ setUserData }) => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
@@ -23,7 +23,7 @@ const LoginPage = ({ setUserData }) => {
   const login = async () => {
     console.log('logging in...');
     const user = await signIn(email, password);
-    const userData = await getUserData(user.email);
+    const userData = await getUserDataByEmail(user.email);
     setUserData(userData);
     console.log('user: ', user);
   };
